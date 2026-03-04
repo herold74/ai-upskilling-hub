@@ -721,7 +721,10 @@ footer a:hover{text-decoration:underline}
       persistAll();
       renderAll();
       showLoadingBanner(false);
-      showSuccessBanner();
+      var rCount = Object.keys(allRatings).length;
+      var wCount = wishes.length;
+      var uCount = Object.keys(upvotes).length;
+      showSuccessBanner('Loaded: ' + rCount + ' ratings, ' + wCount + ' wishes, ' + uCount + ' upvotes');
     } catch (err) {
       console.error('[Hub] loadAll failed:', err);
       backendLoaded = true;
@@ -751,16 +754,16 @@ footer a:hover{text-decoration:underline}
     }
   }
 
-  function showSuccessBanner() {
+  function showSuccessBanner(detail) {
     const el = document.createElement('div');
     el.setAttribute('style',
       'position:fixed;bottom:24px;right:24px;z-index:9999;' +
       'background:#3e8635;color:#fff;padding:12px 20px;' +
       'border-radius:8px;font:500 14px/1.4 "Red Hat Text",sans-serif;' +
       'box-shadow:0 4px 16px rgba(0,0,0,.25);animation:fadeInUp .3s ease');
-    el.textContent = '\u2713 Shared data loaded';
+    el.textContent = '\u2713 ' + (detail || 'Shared data loaded');
     document.body.appendChild(el);
-    setTimeout(function() { el.style.animation = 'fadeOutDown .3s ease forwards'; setTimeout(function() { el.remove(); }, 300); }, 3000);
+    setTimeout(function() { el.style.animation = 'fadeOutDown .3s ease forwards'; setTimeout(function() { el.remove(); }, 300); }, 5000);
   }
 
   function showErrorBanner(msg) {
