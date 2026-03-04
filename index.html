@@ -786,7 +786,7 @@ footer a:hover{text-decoration:underline}
       const hasVoted = wishVoted.includes(w.id);
       li.innerHTML =
         '<span class="wish-text">' + escHTML(w.text) + '</span>' +
-        '<span class="wish-date">' + w.date + '</span>' +
+        '<span class="wish-date">' + formatDate(w.date) + '</span>' +
         '<span class="wish-votes">' +
           '<button class="wish-vote-btn' + (hasVoted ? ' voted' : '') + '" data-wish-id="' + w.id + '">&#9650; ' + (w.votes || 0) + '</button>' +
         '</span>' +
@@ -931,6 +931,14 @@ footer a:hover{text-decoration:underline}
     const d = document.createElement('div');
     d.textContent = str;
     return d.innerHTML;
+  }
+
+  function formatDate(raw) {
+    try {
+      const d = new Date(raw);
+      if (isNaN(d)) return raw;
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    } catch { return raw; }
   }
 
   // ── Init ───────────────────────────────────────────────────────────────
