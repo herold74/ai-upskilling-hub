@@ -209,7 +209,8 @@ section{max-width:var(--max-w);margin:0 auto;padding:56px 24px 48px}
   transition:color .15s;background:none;border:none;padding:0;line-height:1;
 }
 .star-rating .star.filled{color:var(--rh-orange-50)}
-.star-rating .star:hover,.star-rating .star.hover{color:var(--rh-orange-50)}
+.star-rating .star.filled.avg{opacity:.55}
+.star-rating .star:hover,.star-rating .star.hover{color:var(--rh-orange-50);opacity:1}
 .star-rating .count{font-size:.75rem;color:var(--text-muted);margin-left:6px}
 
 /* ── Wish List ──────────────────────────────────────────── */
@@ -790,9 +791,14 @@ footer a:hover{text-decoration:underline}
     const entry = allRatings[id] || { sum: 0, count: 0, userRating: 0 };
     container.innerHTML = '';
 
+    const display = entry.userRating > 0
+      ? entry.userRating
+      : (entry.count > 0 ? Math.round(entry.sum / entry.count) : 0);
+    const isAverage = entry.userRating === 0 && entry.count > 0;
+
     for (let i = 1; i <= 5; i++) {
       const btn = document.createElement('button');
-      btn.className = 'star' + (i <= entry.userRating ? ' filled' : '');
+      btn.className = 'star' + (i <= display ? (isAverage ? ' filled avg' : ' filled') : '');
       btn.textContent = '\u2605';
       btn.setAttribute('aria-label', i + ' star' + (i > 1 ? 's' : ''));
       btn.addEventListener('mouseenter', () => highlightStars(container, i));
@@ -805,7 +811,7 @@ footer a:hover{text-decoration:underline}
     countEl.className = 'count';
     if (entry.count > 0) {
       const avg = (entry.sum / entry.count).toFixed(1);
-      countEl.textContent = avg + ' (' + entry.count + ')';
+      countEl.textContent = avg + ' (' + entry.count + (isAverage ? ' avg' : '') + ')';
     }
     container.appendChild(countEl);
   }
