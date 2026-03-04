@@ -347,6 +347,9 @@ footer a:hover{text-decoration:underline}
   .wishlist-form{flex-direction:column}
   section{padding:40px 16px 32px}
 }
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeOutDown{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(12px)}}
 </style>
 </head>
 <body>
@@ -693,18 +696,44 @@ footer a:hover{text-decoration:underline}
   // ── Load data from backend (or fall back to cache) ─────────────────────
   async function loadAll() {
     if (!useBackend) return;
+    showLoadingBanner(true);
     try {
       const data = await apiGet();
-      if (!data.ok) return;
+      if (!data.ok) { showLoadingBanner(false); return; }
       allRatings = data.ratings || {};
       wishes = data.wishes || [];
       wishVoted = data.wishVoted || [];
       upvotes = data.upvotes || {};
       votedTopics = data.votedTopics || [];
+      backendLoaded = true;
       persistAll();
       renderAll();
+      showLoadingBanner(false);
     } catch (err) {
       console.warn('Backend unavailable, using cached data:', err);
+      backendLoaded = true;
+      showLoadingBanner(false);
+    }
+  }
+
+  function showLoadingBanner(show) {
+    let banner = document.getElementById('loading-banner');
+    if (show && !banner) {
+      banner = document.createElement('div');
+      banner.id = 'loading-banner';
+      banner.setAttribute('style',
+        'position:fixed;bottom:24px;right:24px;z-index:9999;' +
+        'background:var(--rh-gray-90);color:#fff;padding:12px 20px;' +
+        'border-radius:8px;font:500 14px/1.4 "Red Hat Text",sans-serif;' +
+        'box-shadow:0 4px 16px rgba(0,0,0,.25);display:flex;align-items:center;gap:10px;' +
+        'animation:fadeInUp .3s ease');
+      banner.innerHTML = '<span style="display:inline-block;width:16px;height:16px;' +
+        'border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;' +
+        'animation:spin 1s linear infinite"></span> Loading shared data\u2026';
+      document.body.appendChild(banner);
+    } else if (!show && banner) {
+      banner.style.animation = 'fadeOutDown .3s ease forwards';
+      setTimeout(() => banner.remove(), 300);
     }
   }
 
@@ -773,10 +802,13 @@ footer a:hover{text-decoration:underline}
   const wishInput = document.getElementById('wishInput');
   const wishList = document.getElementById('wishlistItems');
 
+  let backendLoaded = false;
+
   function renderWishes() {
     wishList.innerHTML = '';
     if (wishes.length === 0) {
-      wishList.innerHTML = '<li class="empty-state">No suggestions yet -- be the first!</li>';
+      const msg = (useBackend && !backendLoaded) ? 'Loading\u2026' : 'No suggestions yet -- be the first!';
+      wishList.innerHTML = '<li class="empty-state">' + msg + '</li>';
       return;
     }
     const sorted = [...wishes].sort((a, b) => (b.votes || 0) - (a.votes || 0));
