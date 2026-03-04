@@ -22,7 +22,7 @@
 function setupSheet() {
   const ss = SpreadsheetApp.create('AI Upskilling Hub - Data');
 
-  const ratings = ss.getSheetByName('Sheet1');
+  const ratings = ss.getSheets()[0];
   ratings.setName('Ratings');
   ratings.getRange('A1:D1').setValues([['cardId', 'visitorId', 'rating', 'timestamp']]);
   ratings.setFrozenRows(1);
