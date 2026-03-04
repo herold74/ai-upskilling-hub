@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Upskilling Hub | Red Hat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;700&family=Red+Hat+Text:wght@400;500;700&family=Red+Hat+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ── Red Hat Brand Tokens (brand.redhat.com) ───────────── */
+:root{
+  /* Core palette */
+  --rh-red:#EE0000;
+  --rh-red-dark:#A60000;
+  --rh-red-darkest:#5F0000;
+  --rh-red-10:#FCE3E3;
+  --rh-red-20:#FBC5C5;
+  --rh-red-30:#F9A8A8;
+  --rh-red-40:#F56E6E;
+
+  /* Neutrals */
+  --rh-gray-90:#151515;
+  --rh-gray-80:#292929;
+  --rh-gray-60:#4D4D4D;
+  --rh-gray-40:#A3A3A3;
+  --rh-gray-20:#E0E0E0;
+  --rh-gray-10:#F5F5F5;
+  --rh-white:#FFFFFF;
+
+  /* Extended Collection 1: Purple + Teal */
+  --rh-purple-70:#21134D;
+  --rh-purple-50:#5E40BE;
+  --rh-teal-50:#37A3A3;
+  --rh-teal-30:#9AD8D8;
+  --rh-teal-10:#DAF2F2;
+
+  /* Extended Collection 2: Orange */
+  --rh-orange-50:#F5921B;
+  --rh-orange-30:#FCCB8F;
+  --rh-orange-10:#FFE8CC;
+
+  /* Interactive */
+  --rh-blue:#0066CC;
+
+  /* Semantic tokens */
+  --bg:var(--rh-white);
+  --bg-card:var(--rh-white);
+  --bg-nav:rgba(255,255,255,.95);
+  --bg-subtle:var(--rh-gray-10);
+  --text:var(--rh-gray-90);
+  --text-secondary:var(--rh-gray-60);
+  --text-muted:var(--rh-gray-40);
+  --border:var(--rh-gray-20);
+  --shadow:0 1px 8px rgba(21,21,21,.06),0 4px 24px rgba(21,21,21,.04);
+  --shadow-hover:0 2px 12px rgba(21,21,21,.1),0 8px 32px rgba(21,21,21,.06);
+
+  /* Layout */
+  --radius:12px;
+  --radius-sm:8px;
+  --nav-h:64px;
+  --max-w:1140px;
+
+  /* Typography */
+  --font-display:'Red Hat Display',Arial,Helvetica,sans-serif;
+  --font-text:'Red Hat Text',Calibri,'Segoe UI',sans-serif;
+  --font-mono:'Red Hat Mono','Courier New',monospace;
+}
+
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:var(--rh-gray-90);
+    --bg-card:var(--rh-gray-80);
+    --bg-nav:rgba(21,21,21,.95);
+    --bg-subtle:#1e1e1e;
+    --text:var(--rh-gray-20);
+    --text-secondary:var(--rh-gray-40);
+    --text-muted:var(--rh-gray-60);
+    --border:#3a3a3a;
+    --shadow:0 2px 16px rgba(0,0,0,.25);
+    --shadow-hover:0 4px 24px rgba(0,0,0,.35);
+    --rh-red-10:#3a1515;
+    --rh-teal-10:#0d2e2e;
+    --rh-orange-10:#2e2010;
+  }
+}
+
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--nav-h) + 24px)}
+body{font-family:var(--font-text);color:var(--text);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}
+
+/* ── Navigation ─────────────────────────────────────────── */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:var(--bg-nav);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);height:var(--nav-h);
+  display:flex;align-items:center;gap:6px;
+  padding:0 24px;max-width:100%;
+}
+.nav-logo{
+  display:flex;align-items:center;gap:10px;margin-right:auto;
+  text-decoration:none;color:var(--text);
+}
+.nav-logo svg{flex-shrink:0}
+.nav-logo span{
+  font-family:var(--font-display);font-weight:700;font-size:1rem;
+  white-space:nowrap;color:var(--text);
+}
+nav a[data-nav]{
+  font-family:var(--font-display);font-size:.875rem;font-weight:600;
+  text-decoration:none;color:var(--text-secondary);
+  padding:8px 18px;border-radius:999px;transition:all .2s;white-space:nowrap;
+}
+nav a[data-nav]:hover{color:var(--text);background:var(--bg-subtle)}
+nav a[data-nav].active{color:var(--rh-white);background:var(--rh-gray-90)}
+@media(prefers-color-scheme:dark){
+  nav a[data-nav].active{background:var(--rh-gray-60)}
+}
+
+/* ── Red accent bar (top of page) ──────────────────────── */
+body::before{
+  content:'';display:block;height:3px;
+  background:var(--rh-red);
+}
+
+/* ── Section layout ─────────────────────────────────────── */
+section{max-width:var(--max-w);margin:0 auto;padding:56px 24px 48px}
+
+.section-header{margin-bottom:36px}
+.section-header h1{font-family:var(--font-display);font-size:1.875rem;font-weight:700;margin-bottom:6px}
+.section-header p{font-size:1rem;color:var(--text-secondary);line-height:1.7}
+
+/* ── Hero ───────────────────────────────────────────────── */
+.hero{
+  text-align:center;padding:64px 24px 24px;max-width:780px;margin:0 auto;
+}
+.hero h1{
+  font-family:var(--font-display);font-size:2.5rem;font-weight:700;
+  margin-bottom:12px;line-height:1.2;
+}
+.hero h1 .accent{color:var(--rh-red)}
+.hero p{font-size:1.1rem;color:var(--text-secondary);margin-bottom:36px;line-height:1.7}
+
+.hero-tiers{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.hero-tier{
+  display:flex;align-items:center;gap:10px;padding:12px 28px;
+  border-radius:var(--radius);border:1px solid var(--rh-gray-20);
+  font-family:var(--font-display);font-size:.9rem;font-weight:600;
+  color:var(--rh-gray-90);background:var(--rh-gray-10);
+  text-decoration:none;transition:all .2s;cursor:pointer;
+}
+.hero-tier:hover{background:var(--rh-gray-20);border-color:var(--rh-gray-40)}
+
+/* ── Cards grid ─────────────────────────────────────────── */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:20px}
+
+.card{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:24px;display:flex;flex-direction:column;gap:12px;
+  transition:box-shadow .25s,transform .25s;
+}
+.card:hover{box-shadow:var(--shadow-hover);transform:translateY(-2px)}
+
+.badge{
+  font-family:var(--font-display);font-size:.675rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.08em;
+  padding:3px 10px;border-radius:999px;width:fit-content;
+}
+/* Asset type color system (7 distinct colors from RH brand palette) */
+.badge.video{background:var(--rh-red-10);color:var(--rh-red)}
+.badge.tutorial{background:#e8f0fe;color:var(--rh-blue)}
+.badge.template{background:#ede7f9;color:var(--rh-purple-50)}
+.badge.demo{background:#e8f0fe;color:var(--rh-blue)}
+.badge.presentation{background:#FFF4CC;color:#8a6d00}
+.badge.guide{background:#e8f0fe;color:var(--rh-blue)}
+.badge.community{background:#FFF4CC;color:#8a6d00}
+@media(prefers-color-scheme:dark){
+  .badge.tutorial{background:#0d1a2e;color:#6ba3e8}
+  .badge.template{background:#1f1540;color:#b8a4e8}
+  .badge.demo{background:#0d1a2e;color:#6ba3e8}
+  .badge.guide{background:#0d1a2e;color:#6ba3e8}
+  .badge.presentation{background:#2e2a10;color:#e6c84a}
+  .badge.community{background:#2e2a10;color:#e6c84a}
+}
+
+.card h3{font-family:var(--font-display);font-size:1.05rem;font-weight:700;line-height:1.35}
+.card .desc{font-size:.9rem;color:var(--text-secondary);flex:1;line-height:1.6}
+
+.card-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:4px}
+.card-link{
+  font-family:var(--font-text);font-size:.85rem;font-weight:600;
+  color:var(--rh-blue);text-decoration:none;
+  display:inline-flex;align-items:center;gap:4px;transition:color .2s;
+}
+.card-link:hover{color:var(--rh-red);text-decoration:underline}
+.card-link::after{content:'\2192';font-size:1rem}
+
+.more-link{
+  font-size:.8rem;color:var(--text-muted);text-decoration:none;margin-left:auto;
+  transition:color .2s;
+}
+.more-link:hover{color:var(--rh-blue)}
+
+/* ── Star Rating ────────────────────────────────────────── */
+.star-rating{display:flex;align-items:center;gap:2px}
+.star-rating .star{
+  cursor:pointer;font-size:1.2rem;color:var(--rh-gray-20);
+  transition:color .15s;background:none;border:none;padding:0;line-height:1;
+}
+.star-rating .star.filled{color:var(--rh-orange-50)}
+.star-rating .star:hover,.star-rating .star.hover{color:var(--rh-orange-50)}
+.star-rating .count{font-size:.75rem;color:var(--text-muted);margin-left:6px}
+
+/* ── Wish List ──────────────────────────────────────────── */
+.wishlist-section{
+  margin-top:48px;padding:32px;background:var(--bg-card);
+  border:1px solid var(--border);border-radius:var(--radius);
+}
+.wishlist-section h2{font-family:var(--font-display);font-size:1.25rem;font-weight:700;margin-bottom:4px}
+.wishlist-section>p{font-size:.9rem;color:var(--text-secondary);margin-bottom:20px}
+
+.wishlist-form{display:flex;gap:8px;margin-bottom:20px}
+.wishlist-form input{
+  flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);
+  font-family:var(--font-text);font-size:.9rem;background:var(--bg);color:var(--text);
+  transition:border-color .2s;
+}
+.wishlist-form input::placeholder{color:var(--text-muted)}
+.wishlist-form input:focus{outline:none;border-color:var(--rh-blue)}
+.wishlist-form button{
+  padding:10px 22px;background:var(--rh-red);color:var(--rh-white);border:none;
+  border-radius:var(--radius-sm);font-family:var(--font-display);font-weight:600;
+  font-size:.875rem;cursor:pointer;white-space:nowrap;transition:background .2s;
+}
+.wishlist-form button:hover{background:var(--rh-red-dark)}
+
+.wishlist-items{list-style:none;display:flex;flex-direction:column;gap:8px}
+.wish-item{
+  display:flex;align-items:center;gap:12px;padding:10px 14px;
+  background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);
+  font-size:.9rem;
+}
+.wish-item .wish-text{flex:1}
+.wish-item .wish-votes{display:flex;align-items:center;gap:4px;font-size:.85rem;color:var(--text-muted)}
+.wish-item .wish-vote-btn{
+  background:none;border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:4px 10px;cursor:pointer;font-size:.8rem;font-weight:600;
+  color:var(--text-secondary);transition:all .2s;font-family:var(--font-text);
+}
+.wish-item .wish-vote-btn:hover{border-color:var(--rh-blue);color:var(--rh-blue)}
+.wish-item .wish-vote-btn.voted{border-color:var(--rh-red);color:var(--rh-red);background:var(--rh-red-10)}
+.wish-item .wish-date{font-size:.75rem;color:var(--text-muted)}
+.wish-item .wish-delete{
+  background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:1.1rem;
+  padding:0 4px;transition:color .2s;
+}
+.wish-item .wish-delete:hover{color:var(--rh-red)}
+.empty-state{color:var(--text-muted);font-size:.9rem;font-style:italic}
+
+/* ── Upvote ─────────────────────────────────────────────── */
+.upvote-bar{display:flex;align-items:center;gap:12px;margin-top:8px}
+.upvote-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);
+  background:var(--bg);color:var(--text-secondary);cursor:pointer;
+  font-family:var(--font-text);font-size:.85rem;font-weight:600;transition:all .2s;
+}
+.upvote-btn:hover{border-color:var(--rh-gray-60);color:var(--rh-gray-90)}
+.upvote-btn.voted{border-color:var(--rh-gray-60);color:var(--rh-gray-90);background:var(--bg-subtle)}
+.upvote-btn .arrow{font-size:1rem}
+.progress-wrap{flex:1;max-width:220px}
+.progress-track{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.progress-fill{
+  height:100%;background:var(--rh-gray-60);border-radius:3px;
+  transition:width .4s ease;min-width:0;
+}
+.progress-label{font-size:.75rem;color:var(--text-muted);margin-top:3px}
+
+/* ── Learner cards ──────────────────────────────────────── */
+.learner-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px}
+.learner-card{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:28px;display:flex;flex-direction:column;gap:12px;transition:box-shadow .25s;
+}
+.learner-card:hover{box-shadow:var(--shadow-hover)}
+.learner-card h3{font-family:var(--font-display);font-size:1.1rem;font-weight:700}
+.learner-card .desc{font-size:.9rem;color:var(--text-secondary);line-height:1.6}
+.learner-resources{display:flex;gap:8px;flex-wrap:wrap}
+.learner-resources a{
+  font-family:var(--font-display);font-size:.675rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.08em;
+  padding:4px 12px;border-radius:999px;text-decoration:none;
+  transition:all .2s;opacity:.9;
+}
+.learner-resources a:hover{opacity:1;transform:translateY(-1px)}
+.learner-resources a.res-video{background:var(--rh-red-10);color:var(--rh-red)}
+.learner-resources a.res-tutorial{background:#e8f0fe;color:var(--rh-blue)}
+.learner-resources a.res-template{background:#ede7f9;color:var(--rh-purple-50)}
+.learner-resources a.res-demo{background:#e8f0fe;color:var(--rh-blue)}
+.learner-resources a.res-presentation{background:#FFF4CC;color:#8a6d00}
+.learner-resources a.res-guide{background:#e0eded;color:#004D4D}
+@media(prefers-color-scheme:dark){
+  .learner-resources a.res-tutorial{background:#0d1a2e;color:#6ba3e8}
+  .learner-resources a.res-template{background:#1f1540;color:#b8a4e8}
+  .learner-resources a.res-demo{background:#0d1a2e;color:#6ba3e8}
+  .learner-resources a.res-presentation{background:#2e2a10;color:#e6c84a}
+  .learner-resources a.res-guide{background:#0d1a2e;color:#6ba3e8}
+}
+
+/* ── Practitioner cards ─────────────────────────────────── */
+.prac-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:20px}
+.prac-card{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:24px;display:flex;flex-direction:column;gap:10px;transition:box-shadow .25s;
+}
+.prac-card:hover{box-shadow:var(--shadow-hover)}
+.prac-card h3{font-family:var(--font-display);font-size:1.05rem;font-weight:700}
+.prac-card .desc{font-size:.9rem;color:var(--text-secondary);flex:1;line-height:1.6}
+.prac-card a.prac-link{
+  font-size:.85rem;font-weight:600;color:var(--rh-blue);text-decoration:none;
+  display:inline-flex;align-items:center;gap:4px;transition:color .2s;
+}
+.prac-card a.prac-link:hover{color:var(--rh-red);text-decoration:underline}
+.prac-card a.prac-link::after{content:'\2192';font-size:1rem}
+
+/* ── Divider ────────────────────────────────────────────── */
+.divider{max-width:var(--max-w);margin:0 auto;padding:0 24px}
+.divider hr{border:none;border-top:1px solid var(--border)}
+
+/* ── Footer ─────────────────────────────────────────────── */
+footer{
+  text-align:center;padding:40px 24px;font-size:.8rem;color:var(--text-muted);
+  border-top:1px solid var(--border);margin-top:32px;
+}
+footer a{color:var(--rh-blue);text-decoration:none}
+footer a:hover{text-decoration:underline}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media(max-width:640px){
+  .hero h1{font-size:1.75rem}
+  .hero-tiers{flex-direction:column;align-items:center}
+  .cards,.learner-grid,.prac-grid{grid-template-columns:1fr}
+  nav{gap:2px;padding:0 12px}
+  nav a[data-nav]{padding:8px 12px;font-size:.8rem}
+  .nav-logo span{display:none}
+  .wishlist-form{flex-direction:column}
+  section{padding:40px 16px 32px}
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════
+     NAVIGATION
+     ════════════════════════════════════════════════════════ -->
+<nav>
+  <a class="nav-logo" href="#">
+    <!-- Official Red Hat logo (brand.redhat.com) -->
+    <svg width="42" height="32" viewBox="0 0 192.3 146" aria-label="Red Hat" role="img">
+      <path fill="#EE0000" d="m128,84c12.5,0 30.6-2.6 30.6-17.5a19.53,19.53 0 00-.3-3.4L150.9,30.7C149.2,23.6 147.7,20.3 135.2,14.1 125.5,9.1 104.4,1 98.1,1 92.2,1 90.5,8.5 83.6,8.5 76.9,8.5 72,2.9 65.7,2.9c-6,0-9.9,4.1-12.9,12.5 0,0-8.4,23.7-9.5,27.2a6.15,6.15 0 00-.2,1.9C43,53.7 79.3,83.9 128,84m32.5-11.4c1.7,8.2 1.7,9.1 1.7,10.1 0,14-15.7,21.8-36.4,21.8C79,104.5 38.1,77.1 38.1,59a18.35,18.35 0 011.5-7.3C22.8,52.5 1,55.5 1,74.7 1,106.2 75.6,145 134.6,145c45.3,0 56.7-20.5 56.7-36.7 0-12.7-11-27.1-30.8-35.7"/>
+      <path fill="var(--rh-gray-90)" d="m160.5,72.6c1.7,8.2 1.7,9.1 1.7,10.1 0,14-15.7,21.8-36.4,21.8C79,104.5 38.1,77.1 38.1,59a18.35,18.35 0 011.5-7.3l3.7-9.1a6.15,6.15 0 00-.2,1.9c0,9.2 36.3,39.4 84.9,39.4 12.5,0 30.6-2.6 30.6-17.5A19.53,19.53 0 00158.3,63Z"/>
+    </svg>
+    <span>AI Upskilling Hub</span>
+  </a>
+  <a href="#quick-wins" class="active" data-nav>Quick Wins</a>
+  <a href="#learner" data-nav>Learner</a>
+  <a href="#practitioner" data-nav>Practitioner</a>
+</nav>
+
+<!-- ════════════════════════════════════════════════════════
+     HERO
+     ════════════════════════════════════════════════════════ -->
+<div class="hero">
+  <h1>AI Upskilling <span class="accent">Hub</span></h1>
+  <p>Your starting point for practical AI adoption. Begin with Quick Wins, deepen your understanding, and become part of the community.</p>
+  <div class="hero-tiers">
+    <a href="#quick-wins" class="hero-tier">Quick Wins</a>
+    <a href="#learner" class="hero-tier">Learner</a>
+    <a href="#practitioner" class="hero-tier">Practitioner</a>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     TIER 1: QUICK WINS
+     ════════════════════════════════════════════════════════ -->
+<section id="quick-wins">
+  <div class="section-header">
+    <h1>Quick Wins</h1>
+    <p>Ready-to-use templates, tutorials, and videos. Every topic delivers immediate, practical value.</p>
+  </div>
+
+  <div class="cards">
+
+    <div class="card" data-id="qw-001">
+      <span class="badge video">Video</span>
+      <h3>Write effective prompts</h3>
+      <p class="desc">5-minute tutorial for instantly better results with ChatGPT, Gemini, and other AI assistants.</p>
+      <div class="star-rating" data-id="qw-001"></div>
+      <div class="card-actions">
+        <a href="#" class="card-link">Watch now</a>
+        <a href="#learner-prompting" class="more-link">Learn more</a>
+      </div>
+    </div>
+
+    <div class="card" data-id="qw-002">
+      <span class="badge template">Template</span>
+      <h3>AI meeting summaries</h3>
+      <p class="desc">Copy-paste prompt template that turns any meeting transcript into a structured summary in 30 seconds.</p>
+      <div class="star-rating" data-id="qw-002"></div>
+      <div class="card-actions">
+        <a href="#" class="card-link">Get template</a>
+        <a href="#learner-automation" class="more-link">Learn more</a>
+      </div>
+    </div>
+
+    <div class="card" data-id="qw-003">
+      <span class="badge tutorial">Tutorial</span>
+      <h3>Draft emails in seconds</h3>
+      <p class="desc">Step-by-step: craft professional emails with AI assistance, from first draft to final polish.</p>
+      <div class="star-rating" data-id="qw-003"></div>
+      <div class="card-actions">
+        <a href="#" class="card-link">Get started</a>
+        <a href="#learner-prompting" class="more-link">Learn more</a>
+      </div>
+    </div>
+
+    <div class="card" data-id="qw-004">
+      <span class="badge video">Video</span>
+      <h3>Analyze data with AI</h3>
+      <p class="desc">Quickly interpret spreadsheets and datasets -- no programming skills required.</p>
+      <div class="star-rating" data-id="qw-004"></div>
+      <div class="card-actions">
+        <a href="#" class="card-link">Watch now</a>
+        <a href="#learner-data" class="more-link">Learn more</a>
+      </div>
+    </div>
+
+    <div class="card" data-id="qw-005">
+      <span class="badge template">Template</span>
+      <h3>Generate presentation outlines</h3>
+      <p class="desc">Prompt template that transforms bullet points into a structured slide plan, ready for your deck.</p>
+      <div class="star-rating" data-id="qw-005"></div>
+      <div class="card-actions">
+        <a href="#" class="card-link">Get template</a>
+      </div>
+    </div>
+
+    <div class="card" data-id="qw-006">
+      <span class="badge tutorial">Tutorial</span>
+      <h3>AI-powered translations</h3>
+      <p class="desc">DeepL vs. ChatGPT: when to use which tool for the best results across languages.</p>
+      <div class="star-rating" data-id="qw-006"></div>
+      <div class="card-actions">
+        <a href="#" class="card-link">Get started</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Wish List -->
+  <div class="wishlist-section" id="wishlist">
+    <h2>Wish List</h2>
+    <p>What Quick Win is missing? Suggest topics and upvote ideas from others.</p>
+    <form class="wishlist-form" id="wishlistForm">
+      <input type="text" id="wishInput" placeholder="e.g., Using AI for project planning..." maxlength="120" required>
+      <button type="submit">Suggest</button>
+    </form>
+    <ul class="wishlist-items" id="wishlistItems"></ul>
+  </div>
+</section>
+
+<div class="divider"><hr></div>
+
+<!-- ════════════════════════════════════════════════════════
+     TIER 2: LEARNER
+     ════════════════════════════════════════════════════════ -->
+<section id="learner">
+  <div class="section-header">
+    <h1>Learner</h1>
+    <p>Understand the mechanics behind the tools. Click-through demos, videos, and presentations for a solid foundation.</p>
+  </div>
+
+  <div class="learner-grid">
+
+    <div class="learner-card" id="learner-prompting">
+      <h3>Prompt engineering fundamentals</h3>
+      <p class="desc">How AI models process prompts, why context matters, and how to systematically achieve better results.</p>
+      <div class="learner-resources">
+        <a href="#" class="res-demo">Click-through demo</a>
+        <a href="#" class="res-video">Video (20 min)</a>
+        <a href="#" class="res-presentation">Presentation</a>
+      </div>
+      <div class="upvote-bar">
+        <button class="upvote-btn" data-topic="learner-prompting">
+          <span class="arrow">&#9650;</span> Request workshop
+        </button>
+        <div class="progress-wrap">
+          <div class="progress-track"><div class="progress-fill" data-topic="learner-prompting"></div></div>
+          <div class="progress-label" data-topic="learner-prompting">0 of 10 votes</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="learner-card" id="learner-automation">
+      <h3>AI in work processes</h3>
+      <p class="desc">How to integrate AI tools into existing workflows: from analysis and automation to quality assurance.</p>
+      <div class="learner-resources">
+        <a href="#" class="res-demo">Click-through demo</a>
+        <a href="#" class="res-video">Video (25 min)</a>
+      </div>
+      <div class="upvote-bar">
+        <button class="upvote-btn" data-topic="learner-automation">
+          <span class="arrow">&#9650;</span> Request workshop
+        </button>
+        <div class="progress-wrap">
+          <div class="progress-track"><div class="progress-fill" data-topic="learner-automation"></div></div>
+          <div class="progress-label" data-topic="learner-automation">0 of 10 votes</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="learner-card" id="learner-data">
+      <h3>Data analysis with AI</h3>
+      <p class="desc">How AI models interpret data, recognize patterns, and create visualizations -- including limitations and pitfalls.</p>
+      <div class="learner-resources">
+        <a href="#" class="res-video">Video (30 min)</a>
+        <a href="#" class="res-presentation">Presentation</a>
+      </div>
+      <div class="upvote-bar">
+        <button class="upvote-btn" data-topic="learner-data">
+          <span class="arrow">&#9650;</span> Request workshop
+        </button>
+        <div class="progress-wrap">
+          <div class="progress-track"><div class="progress-fill" data-topic="learner-data"></div></div>
+          <div class="progress-label" data-topic="learner-data">0 of 10 votes</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="learner-card" id="learner-tools">
+      <h3>Understanding the tool landscape</h3>
+      <p class="desc">ChatGPT, Gemini, Copilot, DeepL, Cursor -- which tool solves which problem? A decision guide with concrete examples.</p>
+      <div class="learner-resources">
+        <a href="#" class="res-demo">Click-through demo</a>
+        <a href="#" class="res-presentation">Presentation</a>
+      </div>
+      <div class="upvote-bar">
+        <button class="upvote-btn" data-topic="learner-tools">
+          <span class="arrow">&#9650;</span> Request workshop
+        </button>
+        <div class="progress-wrap">
+          <div class="progress-track"><div class="progress-fill" data-topic="learner-tools"></div></div>
+          <div class="progress-label" data-topic="learner-tools">0 of 10 votes</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"><hr></div>
+
+<!-- ════════════════════════════════════════════════════════
+     TIER 3: PRACTITIONER
+     ════════════════════════════════════════════════════════ -->
+<section id="practitioner">
+  <div class="section-header">
+    <h1>Practitioner</h1>
+    <p>Hands-on: build and rebuild processes, develop your own solutions, and share knowledge within the community.</p>
+  </div>
+
+  <div class="prac-grid">
+
+    <div class="prac-card">
+      <span class="badge guide">Hands-on guide</span>
+      <h3>Build your own prompt library</h3>
+      <p class="desc">Step-by-step: from your first prompt collection to a team-wide reusable library.</p>
+      <a href="#" class="prac-link">Start guide</a>
+    </div>
+
+    <div class="prac-card">
+      <span class="badge guide">Hands-on guide</span>
+      <h3>Automate an AI workflow</h3>
+      <p class="desc">Identify a recurring work process and partially automate it with AI tools.</p>
+      <a href="#" class="prac-link">Start guide</a>
+    </div>
+
+    <div class="prac-card">
+      <span class="badge community">Community</span>
+      <h3>Tool Time -- Lunch &amp; Learn</h3>
+      <p class="desc">Monthly 45-min sessions: AI Champions demo features and successful use cases in key tools.</p>
+      <a href="#" class="prac-link">View schedule</a>
+    </div>
+
+    <div class="prac-card">
+      <span class="badge community">Community</span>
+      <h3>Prompt Showcase</h3>
+      <p class="desc">Bi-weekly: a Champion presents one high-quality prompt as a reusable asset for the entire team.</p>
+      <a href="#" class="prac-link">Next session</a>
+    </div>
+
+    <div class="prac-card">
+      <span class="badge community">Community</span>
+      <h3>Dedicated Help Channel</h3>
+      <p class="desc">Ongoing async support: prompt reviews, tool access guidance, quick tips, and immediate barrier removal.</p>
+      <a href="#" class="prac-link">Join channel</a>
+    </div>
+
+    <div class="prac-card">
+      <span class="badge guide">Hands-on guide</span>
+      <h3>Run an AI proof of concept</h3>
+      <p class="desc">Plan, execute, and present a concrete AI proof of concept for your team.</p>
+      <a href="#" class="prac-link">Start guide</a>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  AI Upskilling Hub &middot; Content is maintained directly in this file &middot; Ratings &amp; votes are shared across the team
+</footer>
+
+<!-- ════════════════════════════════════════════════════════
+     JAVASCRIPT
+     ════════════════════════════════════════════════════════ -->
+<script>
+(function() {
+  'use strict';
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // CONFIGURATION -- Paste your Google Apps Script Web App URL here:
+  // ═══════════════════════════════════════════════════════════════════════════
+  const API_URL = 'https://script.google.com/a/macros/redhat.com/s/AKfycbxNOT3xJHw821xhg3fN6RyCd8igUxxHURudl3FCOFb9uSR0Ka1KLkH2_MyZdlk1Lg2jsg/exec';
+  // Example: 'https://script.google.com/macros/s/AKfycbx.../exec'
+  // Leave empty to run in offline/localStorage-only mode.
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  const WORKSHOP_THRESHOLD = 10;
+  const useBackend = API_URL.length > 0;
+
+  // ── Visitor ID (persisted per browser to track "my" votes) ─────────────
+  function getVisitorId() {
+    let id = localStorage.getItem('aiHub_visitorId');
+    if (!id) {
+      id = 'v-' + Date.now() + '-' + Math.random().toString(36).substr(2, 8);
+      localStorage.setItem('aiHub_visitorId', id);
+    }
+    return id;
+  }
+  const VISITOR_ID = getVisitorId();
+
+  // ── Local cache helpers ────────────────────────────────────────────────
+  function cacheLoad(key) {
+    try { return JSON.parse(localStorage.getItem(key)) || null; }
+    catch { return null; }
+  }
+  function cacheSave(key, data) {
+    localStorage.setItem(key, JSON.stringify(data));
+  }
+
+  // ── API helpers ────────────────────────────────────────────────────────
+  async function apiGet() {
+    const res = await fetch(API_URL + '?visitorId=' + encodeURIComponent(VISITOR_ID));
+    return res.json();
+  }
+
+  async function apiPost(body) {
+    body.visitorId = VISITOR_ID;
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(body)
+    });
+    return res.json();
+  }
+
+  // ── State ──────────────────────────────────────────────────────────────
+  let allRatings = cacheLoad('aiHub_ratings') || {};
+  let wishes = cacheLoad('aiHub_wishes') || [];
+  let wishVoted = cacheLoad('aiHub_wishVoted') || [];
+  let upvotes = cacheLoad('aiHub_upvotes') || {};
+  let votedTopics = cacheLoad('aiHub_votedTopics') || [];
+
+  function persistAll() {
+    cacheSave('aiHub_ratings', allRatings);
+    cacheSave('aiHub_wishes', wishes);
+    cacheSave('aiHub_wishVoted', wishVoted);
+    cacheSave('aiHub_upvotes', upvotes);
+    cacheSave('aiHub_votedTopics', votedTopics);
+  }
+
+  // ── Load data from backend (or fall back to cache) ─────────────────────
+  async function loadAll() {
+    if (!useBackend) return;
+    try {
+      const data = await apiGet();
+      if (!data.ok) return;
+      allRatings = data.ratings || {};
+      wishes = data.wishes || [];
+      wishVoted = data.wishVoted || [];
+      upvotes = data.upvotes || {};
+      votedTopics = data.votedTopics || [];
+      persistAll();
+      renderAll();
+    } catch (err) {
+      console.warn('Backend unavailable, using cached data:', err);
+    }
+  }
+
+  function renderAll() {
+    document.querySelectorAll('.star-rating').forEach(renderStars);
+    renderWishes();
+    renderUpvotes();
+  }
+
+  // ── Star Ratings ───────────────────────────────────────────────────────
+  function renderStars(container) {
+    const id = container.dataset.id;
+    const entry = allRatings[id] || { sum: 0, count: 0, userRating: 0 };
+    container.innerHTML = '';
+
+    for (let i = 1; i <= 5; i++) {
+      const btn = document.createElement('button');
+      btn.className = 'star' + (i <= entry.userRating ? ' filled' : '');
+      btn.textContent = '\u2605';
+      btn.setAttribute('aria-label', i + ' star' + (i > 1 ? 's' : ''));
+      btn.addEventListener('mouseenter', () => highlightStars(container, i));
+      btn.addEventListener('mouseleave', () => clearHighlight(container));
+      btn.addEventListener('click', () => rate(container, id, i));
+      container.appendChild(btn);
+    }
+
+    const countEl = document.createElement('span');
+    countEl.className = 'count';
+    if (entry.count > 0) {
+      const avg = (entry.sum / entry.count).toFixed(1);
+      countEl.textContent = avg + ' (' + entry.count + ')';
+    }
+    container.appendChild(countEl);
+  }
+
+  function highlightStars(container, upTo) {
+    container.querySelectorAll('.star').forEach((s, i) => {
+      s.classList.toggle('hover', i < upTo);
+    });
+  }
+  function clearHighlight(container) {
+    container.querySelectorAll('.star').forEach(s => s.classList.remove('hover'));
+  }
+
+  async function rate(container, id, value) {
+    const entry = allRatings[id] || { sum: 0, count: 0, userRating: 0 };
+    if (entry.userRating > 0) {
+      entry.sum -= entry.userRating;
+    } else {
+      entry.count++;
+    }
+    entry.sum += value;
+    entry.userRating = value;
+    allRatings[id] = entry;
+    persistAll();
+    renderStars(container);
+
+    if (useBackend) {
+      try { await apiPost({ action: 'rate', cardId: id, rating: value }); }
+      catch (err) { console.warn('Rate sync failed:', err); }
+    }
+  }
+
+  // ── Wish List ──────────────────────────────────────────────────────────
+  const wishForm = document.getElementById('wishlistForm');
+  const wishInput = document.getElementById('wishInput');
+  const wishList = document.getElementById('wishlistItems');
+
+  function renderWishes() {
+    wishList.innerHTML = '';
+    if (wishes.length === 0) {
+      wishList.innerHTML = '<li class="empty-state">No suggestions yet -- be the first!</li>';
+      return;
+    }
+    const sorted = [...wishes].sort((a, b) => (b.votes || 0) - (a.votes || 0));
+    sorted.forEach(w => {
+      const li = document.createElement('li');
+      li.className = 'wish-item';
+      const hasVoted = wishVoted.includes(w.id);
+      li.innerHTML =
+        '<span class="wish-text">' + escHTML(w.text) + '</span>' +
+        '<span class="wish-date">' + w.date + '</span>' +
+        '<span class="wish-votes">' +
+          '<button class="wish-vote-btn' + (hasVoted ? ' voted' : '') + '" data-wish-id="' + w.id + '">&#9650; ' + (w.votes || 0) + '</button>' +
+        '</span>' +
+        '<button class="wish-delete" data-wish-id="' + w.id + '" title="Delete">&times;</button>';
+      wishList.appendChild(li);
+    });
+
+    wishList.querySelectorAll('.wish-vote-btn').forEach(btn => {
+      btn.addEventListener('click', () => voteWish(btn.dataset.wishId));
+    });
+    wishList.querySelectorAll('.wish-delete').forEach(btn => {
+      btn.addEventListener('click', () => deleteWish(btn.dataset.wishId));
+    });
+  }
+
+  async function voteWish(id) {
+    const idx = wishes.findIndex(w => w.id === id);
+    if (idx === -1) return;
+    if (wishVoted.includes(id)) {
+      wishes[idx].votes = Math.max(0, (wishes[idx].votes || 0) - 1);
+      wishVoted = wishVoted.filter(v => v !== id);
+    } else {
+      wishes[idx].votes = (wishes[idx].votes || 0) + 1;
+      wishVoted.push(id);
+    }
+    persistAll();
+    renderWishes();
+
+    if (useBackend) {
+      try { await apiPost({ action: 'voteWish', wishId: id }); }
+      catch (err) { console.warn('Wish vote sync failed:', err); }
+    }
+  }
+
+  async function deleteWish(id) {
+    wishes = wishes.filter(w => w.id !== id);
+    wishVoted = wishVoted.filter(v => v !== id);
+    persistAll();
+    renderWishes();
+
+    if (useBackend) {
+      try { await apiPost({ action: 'deleteWish', wishId: id }); }
+      catch (err) { console.warn('Wish delete sync failed:', err); }
+    }
+  }
+
+  wishForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    const text = wishInput.value.trim();
+    if (!text) return;
+
+    const localWish = {
+      id: 'w-' + Date.now(),
+      text: text,
+      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      votes: 0
+    };
+    wishes.push(localWish);
+    persistAll();
+    wishInput.value = '';
+    renderWishes();
+
+    if (useBackend) {
+      try {
+        const res = await apiPost({ action: 'addWish', text: text });
+        if (res.ok && res.wishId) {
+          localWish.id = res.wishId;
+          localWish.date = res.date;
+          persistAll();
+          renderWishes();
+        }
+      } catch (err) { console.warn('Wish add sync failed:', err); }
+    }
+  });
+
+  // ── Upvoting ───────────────────────────────────────────────────────────
+  function renderUpvotes() {
+    document.querySelectorAll('.upvote-btn').forEach(btn => {
+      const topic = btn.dataset.topic;
+      const count = upvotes[topic] || 0;
+      const hasVoted = votedTopics.includes(topic);
+
+      btn.classList.toggle('voted', hasVoted);
+
+      const fill = document.querySelector('.progress-fill[data-topic="' + topic + '"]');
+      const label = document.querySelector('.progress-label[data-topic="' + topic + '"]');
+      if (fill) fill.style.width = Math.min(100, (count / WORKSHOP_THRESHOLD) * 100) + '%';
+      if (label) {
+        if (count >= WORKSHOP_THRESHOLD) {
+          label.textContent = 'Workshop is being planned!';
+          label.style.color = 'var(--rh-red)';
+          label.style.fontWeight = '600';
+        } else {
+          label.textContent = count + ' of ' + WORKSHOP_THRESHOLD + ' votes';
+          label.style.color = '';
+          label.style.fontWeight = '';
+        }
+      }
+    });
+  }
+
+  document.querySelectorAll('.upvote-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const topic = btn.dataset.topic;
+      if (votedTopics.includes(topic)) {
+        upvotes[topic] = Math.max(0, (upvotes[topic] || 0) - 1);
+        const idx = votedTopics.indexOf(topic);
+        if (idx > -1) votedTopics.splice(idx, 1);
+      } else {
+        upvotes[topic] = (upvotes[topic] || 0) + 1;
+        votedTopics.push(topic);
+      }
+      persistAll();
+      renderUpvotes();
+
+      if (useBackend) {
+        try { await apiPost({ action: 'upvote', topicId: topic }); }
+        catch (err) { console.warn('Upvote sync failed:', err); }
+      }
+    });
+  });
+
+  // ── Nav highlight on scroll ────────────────────────────────────────────
+  const navLinks = document.querySelectorAll('nav a[data-nav]');
+  const sections = document.querySelectorAll('section[id]');
+
+  function updateNav() {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 100) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  }
+
+  window.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
+
+  // ── Utility ────────────────────────────────────────────────────────────
+  function escHTML(str) {
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+  }
+
+  // ── Init ───────────────────────────────────────────────────────────────
+  renderAll();
+  loadAll();
+})();
+</script>
+</body>
+</html>
