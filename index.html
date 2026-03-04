@@ -663,33 +663,12 @@ footer a:hover{text-decoration:underline}
   }
 
   // ── API helpers ────────────────────────────────────────────────────────
-  function apiGet() {
-    return new Promise(function(resolve, reject) {
-      var cbName = '_hubCb_' + Date.now();
-      var script = document.createElement('script');
-      var timer = setTimeout(function() {
-        cleanup();
-        reject(new Error('Backend timeout (15s)'));
-      }, 15000);
-
-      function cleanup() {
-        clearTimeout(timer);
-        delete window[cbName];
-        if (script.parentNode) script.remove();
-      }
-
-      window[cbName] = function(data) {
-        cleanup();
-        resolve(data);
-      };
-
-      script.src = API_URL + '?visitorId=' + encodeURIComponent(VISITOR_ID) + '&callback=' + cbName;
-      script.onerror = function() {
-        cleanup();
-        reject(new Error('Script load failed'));
-      };
-      document.head.appendChild(script);
-    });
+  async function apiGet() {
+    const url = API_URL + '?visitorId=' + encodeURIComponent(VISITOR_ID);
+    const res = await fetch(url);
+    const text = await res.text();
+    if (!text) throw new Error('Empty response (status ' + res.status + ')');
+    return JSON.parse(text);
   }
 
   async function apiPost(body) {
@@ -728,7 +707,11 @@ footer a:hover{text-decoration:underline}
     showLoadingBanner(true);
     try {
       const data = await apiGet();
-      if (!data.ok) { showLoadingBanner(false); return; }
+      if (!data.ok) {
+        showLoadingBanner(false);
+        showErrorBanner('Backend returned ok:false - ' + (data.error || 'unknown'));
+        return;
+      }
       allRatings = data.ratings || {};
       wishes = data.wishes || [];
       wishVoted = data.wishVoted || [];
@@ -738,6 +721,7 @@ footer a:hover{text-decoration:underline}
       persistAll();
       renderAll();
       showLoadingBanner(false);
+      showSuccessBanner();
     } catch (err) {
       console.error('[Hub] loadAll failed:', err);
       backendLoaded = true;
@@ -765,6 +749,18 @@ footer a:hover{text-decoration:underline}
       banner.style.animation = 'fadeOutDown .3s ease forwards';
       setTimeout(() => banner.remove(), 300);
     }
+  }
+
+  function showSuccessBanner() {
+    const el = document.createElement('div');
+    el.setAttribute('style',
+      'position:fixed;bottom:24px;right:24px;z-index:9999;' +
+      'background:#3e8635;color:#fff;padding:12px 20px;' +
+      'border-radius:8px;font:500 14px/1.4 "Red Hat Text",sans-serif;' +
+      'box-shadow:0 4px 16px rgba(0,0,0,.25);animation:fadeInUp .3s ease');
+    el.textContent = '\u2713 Shared data loaded';
+    document.body.appendChild(el);
+    setTimeout(function() { el.style.animation = 'fadeOutDown .3s ease forwards'; setTimeout(function() { el.remove(); }, 300); }, 3000);
   }
 
   function showErrorBanner(msg) {
