@@ -664,18 +664,28 @@ footer a:hover{text-decoration:underline}
 
   // ── API helpers ────────────────────────────────────────────────────────
   async function apiGet() {
-    const res = await fetch(API_URL + '?visitorId=' + encodeURIComponent(VISITOR_ID));
-    return res.json();
+    const url = API_URL + '?visitorId=' + encodeURIComponent(VISITOR_ID);
+    const res = await fetch(url, { redirect: 'follow' });
+    const text = await res.text();
+    console.log('[Hub] GET status:', res.status, 'type:', res.headers.get('content-type'), 'body:', text.substring(0, 300));
+    if (!text) throw new Error('Empty response from backend');
+    try { return JSON.parse(text); }
+    catch (e) { throw new Error('Invalid JSON: ' + text.substring(0, 200)); }
   }
 
   async function apiPost(body) {
     body.visitorId = VISITOR_ID;
     const res = await fetch(API_URL, {
       method: 'POST',
+      redirect: 'follow',
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify(body)
     });
-    return res.json();
+    const text = await res.text();
+    console.log('[Hub] POST status:', res.status, 'body:', text.substring(0, 300));
+    if (!text) throw new Error('Empty response from backend');
+    try { return JSON.parse(text); }
+    catch (e) { throw new Error('Invalid JSON: ' + text.substring(0, 200)); }
   }
 
   // ── State ──────────────────────────────────────────────────────────────
@@ -710,9 +720,10 @@ footer a:hover{text-decoration:underline}
       renderAll();
       showLoadingBanner(false);
     } catch (err) {
-      console.warn('Backend unavailable, using cached data:', err);
+      console.error('[Hub] loadAll failed:', err);
       backendLoaded = true;
       showLoadingBanner(false);
+      showErrorBanner(err.message);
     }
   }
 
@@ -735,6 +746,18 @@ footer a:hover{text-decoration:underline}
       banner.style.animation = 'fadeOutDown .3s ease forwards';
       setTimeout(() => banner.remove(), 300);
     }
+  }
+
+  function showErrorBanner(msg) {
+    const el = document.createElement('div');
+    el.setAttribute('style',
+      'position:fixed;bottom:24px;right:24px;z-index:9999;' +
+      'background:#c9190b;color:#fff;padding:14px 20px;max-width:420px;' +
+      'border-radius:8px;font:500 13px/1.5 "Red Hat Text",sans-serif;' +
+      'box-shadow:0 4px 16px rgba(0,0,0,.25);animation:fadeInUp .3s ease;word-break:break-word');
+    el.textContent = 'Backend error: ' + msg;
+    document.body.appendChild(el);
+    setTimeout(() => { el.style.animation = 'fadeOutDown .3s ease forwards'; setTimeout(() => el.remove(), 300); }, 12000);
   }
 
   function renderAll() {
