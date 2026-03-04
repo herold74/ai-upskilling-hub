@@ -663,14 +663,33 @@ footer a:hover{text-decoration:underline}
   }
 
   // ── API helpers ────────────────────────────────────────────────────────
-  async function apiGet() {
-    const url = API_URL + '?visitorId=' + encodeURIComponent(VISITOR_ID);
-    const res = await fetch(url, { redirect: 'follow' });
-    const text = await res.text();
-    console.log('[Hub] GET status:', res.status, 'type:', res.headers.get('content-type'), 'body:', text.substring(0, 300));
-    if (!text) throw new Error('Empty response from backend');
-    try { return JSON.parse(text); }
-    catch (e) { throw new Error('Invalid JSON: ' + text.substring(0, 200)); }
+  function apiGet() {
+    return new Promise(function(resolve, reject) {
+      var cbName = '_hubCb_' + Date.now();
+      var script = document.createElement('script');
+      var timer = setTimeout(function() {
+        cleanup();
+        reject(new Error('Backend timeout (15s)'));
+      }, 15000);
+
+      function cleanup() {
+        clearTimeout(timer);
+        delete window[cbName];
+        if (script.parentNode) script.remove();
+      }
+
+      window[cbName] = function(data) {
+        cleanup();
+        resolve(data);
+      };
+
+      script.src = API_URL + '?visitorId=' + encodeURIComponent(VISITOR_ID) + '&callback=' + cbName;
+      script.onerror = function() {
+        cleanup();
+        reject(new Error('Script load failed'));
+      };
+      document.head.appendChild(script);
+    });
   }
 
   async function apiPost(body) {

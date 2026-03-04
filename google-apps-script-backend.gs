@@ -52,9 +52,15 @@ function getSheet() {
   return SpreadsheetApp.openById(id);
 }
 
-function jsonResponse(data) {
+function jsonResponse(data, callback) {
+  var json = JSON.stringify(data);
+  if (callback) {
+    return ContentService
+      .createTextOutput(callback + '(' + json + ')')
+      .setMimeType(ContentService.MimeType.JAVASCRIPT);
+  }
   return ContentService
-    .createTextOutput(JSON.stringify(data))
+    .createTextOutput(json)
     .setMimeType(ContentService.MimeType.JSON);
 }
 
@@ -72,6 +78,7 @@ function getSheetData(sheet) {
 // ── GET: Load All Data ───────────────────────────────────────────────────────
 
 function doGet(e) {
+  var callback = (e.parameter && e.parameter.callback) || '';
   try {
     const visitorId = (e.parameter && e.parameter.visitorId) || '';
     const ss = getSheet();
@@ -117,9 +124,9 @@ function doGet(e) {
       wishVoted: myWishVotes,
       upvotes: upvoteCounts,
       votedTopics: myUpvotes
-    });
+    }, callback);
   } catch (err) {
-    return jsonResponse({ ok: false, error: err.message });
+    return jsonResponse({ ok: false, error: err.message }, callback);
   }
 }
 
